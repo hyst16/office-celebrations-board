@@ -63,3 +63,11 @@ export function normalizeEvents(icalText, type, office, week) {
     }];
   });
 }
+
+export function summarizeCalendar(icalText, week) {
+  const events = parseICalendar(icalText);
+  return {
+    calendarEvents: events.length,
+    currentWeekEvents: events.filter((item) => eventDate(item.DTSTART, week)).length
+  };
+}

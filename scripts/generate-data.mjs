@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { chicagoDate, normalizeEvents, weekDates } from "./ical.mjs";
+import { chicagoDate, normalizeEvents, summarizeCalendar, weekDates } from "./ical.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const output = resolve(root, "public", "data", "celebrations.json");
@@ -22,6 +22,11 @@ for (const office of offices) {
     const source = await response.text();
     const normalized = normalizeEvents(source, type, office.slug, week);
     if (!source.includes("BEGIN:VCALENDAR")) throw new Error(`Invalid iCalendar data in ${type} feed for ${office.slug}`);
+    const summary = summarizeCalendar(source, week);
+    console.log(
+      `${office.slug} ${type}: ${summary.calendarEvents} calendar event(s), ` +
+      `${summary.currentWeekEvents} in the current week, ${normalized.length} emitted.`
+    );
     events.push(...normalized);
   }
 }

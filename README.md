@@ -45,7 +45,7 @@ Every office change has four required parts. Complete them together before runni
 3. **Add both YAML entries to the workflow.** In `.github/workflows/deploy-pages.yml`, add the birthday and anniversary mappings to the `env:` block shown above. The names must match the config and the repository secrets exactly. A configured secret is not available to the workflow until its YAML mapping exists.
 4. **Refresh this README's managed office section.** Run `npm run sync:offices`, commit the resulting README change with the config/workflow change, and run `npm test`. The test fails if the configured office URLs, secret names, or YAML examples in this README become stale.
 
-Then run **Build and deploy celebration displays** manually from the Actions tab. A successful **Generate public celebration data** step confirms the workflow can read and parse every configured feed. Missing secrets, inaccessible URLs, or invalid calendar data fail the job before anything is deployed.
+Then run **Build and deploy celebration displays** manually from the Actions tab. A successful **Generate public celebration data** step confirms the workflow can read and parse every configured feed. Its private Actions log reports each office/feed's total calendar-event count, current-week count, and emitted count, but never logs names, dates, feed URLs, or raw calendar contents. Missing secrets, inaccessible URLs, or invalid calendar data fail the job before anything is deployed.
 
 Each feed must be a valid iCalendar document with `VEVENT` entries, a `SUMMARY` person name, and a `DTSTART` date. Anniversary entries may include `X-SERVICE-YEARS:5`.
 

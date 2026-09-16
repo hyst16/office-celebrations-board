@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const readmePath = resolve(root, "README.md");
 const offices = JSON.parse(await readFile(resolve(root, "config", "offices.json"), "utf8"));
-const readme = await readFile(readmePath, "utf8");
+const readme = (await readFile(readmePath, "utf8")).replace(/\r\n/g, "\n");
 const start = "<!-- CONFIGURED_OFFICES:START -->";
 const end = "<!-- CONFIGURED_OFFICES:END -->";
 const pageBaseUrl = "https://hyst16.github.io/office-celebrations-board";

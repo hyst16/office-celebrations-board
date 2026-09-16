@@ -1,0 +1,8 @@
+[
+  {
+    "slug": "chicago",
+    "name": "Chicago Office",
+    "birthdaySecret": "CHICAGO_BIRTHDAY_ICAL_URL",
+    "anniversarySecret": "CHICAGO_ANNIVERSARY_ICAL_URL"
+  }
+]

@@ -55,7 +55,7 @@ Each feed must be a valid iCalendar document with `VEVENT` entries, a `SUMMARY` 
 2. Configure the secrets and YAML mappings above.
 3. Run **Build and deploy celebration displays** once.
 
-The workflow runs daily at `12:00 UTC`: 06:00 Central Standard Time or 07:00 Central Daylight Time. GitHub Actions cron uses UTC and does not adjust for daylight saving time. It redeploys fresh data daily, but a browser tab that remains open needs a page reload to receive it.
+The workflow runs daily at `12:00 UTC`: 06:00 Central Standard Time or 07:00 Central Daylight Time. GitHub Actions cron uses UTC and does not adjust for daylight saving time. The display requests fresh generated data without using its browser cache and automatically reloads every six hours, so a continuously open TV will receive a daily deployment without manual intervention. After a deployment that predates this behavior, use a one-time hard refresh (`Ctrl+Shift+R`) or restart the PosterBooking item.
 
 The dashboard uses **America/Chicago** for current-day and Friday-preview decisions. Each screen is visible for 12 seconds: today's celebration heroes, Friday previews for Saturday/Sunday celebrations, then the Monday-Sunday weekly list. A birthday and anniversary for the same person/date share a hero. If no event is in the current week, the display stays on its branded “No celebrations this week / Check back next week!” screen.
 

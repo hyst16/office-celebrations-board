@@ -3,6 +3,7 @@ import "./styles.css";
 const WEEKDAY = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", weekday: "long" });
 const DATE = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", month: "long", day: "numeric" });
 const app = document.querySelector("#app");
+const DISPLAY_RELOAD_MS = 6 * 60 * 60 * 1000;
 
 function chicagoDate() {
   const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts();
@@ -67,7 +68,7 @@ function rotate(slides) {
   if (slides.length > 1) setInterval(() => { current = (current + 1) % slides.length; app.innerHTML = slides[current]; }, 12000);
 }
 async function start() {
-  const data = await fetch("./data/celebrations.json").then((response) => {
+  const data = await fetch(`./data/celebrations.json?updated=${Date.now()}`, { cache: "no-store" }).then((response) => {
     if (!response.ok) throw new Error("Celebration data is unavailable.");
     return response.json();
   });
@@ -84,3 +85,4 @@ async function start() {
   rotate([...todayEvents.map((event) => hero(event, false)), ...fridayPreviews.map((event) => hero(event, true)), weekly(events, office.name, data.weekStart)]);
 }
 start().catch((error) => { app.innerHTML = `<section class="screen empty-state"><h1>Display unavailable</h1><p>${error.message}</p></section>`; });
+window.setTimeout(() => window.location.reload(), DISPLAY_RELOAD_MS);

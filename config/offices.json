@@ -4,5 +4,11 @@
     "name": "Yanka Office",
     "birthdaySecret": "YANKA_BIRTHDAY_ICAL_URL",
     "anniversarySecret": "YANKA_ANNIVERSARY_ICAL_URL"
-  }
+  },
+  {
+  "slug": "lincolnadmin",
+  "name": "Lincoln Admin Office",
+  "birthdaySecret": "LINCOLNADMIN_BIRTHDAY_ICAL_URL",
+  "anniversarySecret": "LINCOLNADMIN_ANNIVERSARY_ICAL_URL"
+}
 ]

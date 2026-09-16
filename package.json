@@ -1,0 +1,15 @@
+{
+  "name": "office-celebrations-board",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node --test",
+    "generate:data": "node scripts/generate-data.mjs"
+  },
+  "devDependencies": {
+    "vite": "^6.1.0"
+  }
+}

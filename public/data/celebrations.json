@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-01-05T12:00:00.000Z",
+  "timeZone": "America/Chicago",
+  "weekStart": "2026-01-05",
+  "weekEnd": "2026-01-11",
+  "offices": [{ "slug": "chicago", "name": "Chicago Office" }],
+  "events": [
+    { "person": "Avery Sample", "type": "birthday", "date": "2026-01-05", "office": "chicago" },
+    { "person": "Jordan Example", "type": "anniversary", "date": "2026-01-09", "serviceYears": 5, "office": "chicago" }
+  ]
+}

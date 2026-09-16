@@ -29,8 +29,8 @@ jobs:
       - run: npm ci
       - name: Generate public celebration data
         env:
-          CHICAGO_BIRTHDAY_ICAL_URL: ${{ secrets.CHICAGO_BIRTHDAY_ICAL_URL }}
-          CHICAGO_ANNIVERSARY_ICAL_URL: ${{ secrets.CHICAGO_ANNIVERSARY_ICAL_URL }}
+          YANKA_BIRTHDAY_ICAL_URL: ${{ secrets.YANKA_BIRTHDAY_ICAL_URL }}
+          YANKA_ANNIVERSARY_ICAL_URL: ${{ secrets.YANKA_ANNIVERSARY_ICAL_URL }}
         run: npm run generate:data
       - run: npm test
       - run: npm run build

@@ -31,6 +31,8 @@ jobs:
         env:
           YANKA_BIRTHDAY_ICAL_URL: ${{ secrets.YANKA_BIRTHDAY_ICAL_URL }}
           YANKA_ANNIVERSARY_ICAL_URL: ${{ secrets.YANKA_ANNIVERSARY_ICAL_URL }}
+          LINCOLNADMIN_BIRTHDAY_ICAL_URL: ${{ secrets.LINCOLNADMIN_BIRTHDAY_ICAL_URL }}
+          LINCOLNADMIN_ANNIVERSARY_ICAL_URL: ${{ secrets.LINCOLNADMIN_ANNIVERSARY_ICAL_URL }}
         run: npm run generate:data
       - run: npm test
       - run: npm run build

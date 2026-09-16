@@ -45,7 +45,7 @@ Every office change has four required parts. Complete them together before runni
 3. **Add both YAML entries to the workflow.** In `.github/workflows/deploy-pages.yml`, add the birthday and anniversary mappings to the `env:` block shown above. The names must match the config and the repository secrets exactly. A configured secret is not available to the workflow until its YAML mapping exists.
 4. **Refresh this README's managed office section.** Run `npm run sync:offices`, commit the resulting README change with the config/workflow change, and run `npm test`. The test fails if the configured office URLs, secret names, or YAML examples in this README become stale.
 
-Then run **Build and deploy celebration displays** manually from the Actions tab. A successful **Generate public celebration data** step confirms the workflow can read and parse every configured feed. Missing secrets, inaccessible URLs, or invalid calendar data fail the job before anything is deployed.
+Then run **Build and deploy celebration displays** manually from the Actions tab. A successful **Generate public celebration data** step confirms the workflow can read and parse every configured feed. Its private Actions log reports each office/feed's total calendar-event count, current-week count, and emitted count, but never logs names, dates, feed URLs, or raw calendar contents. Missing secrets, inaccessible URLs, or invalid calendar data fail the job before anything is deployed.
 
 Each feed must be a valid iCalendar document with `VEVENT` entries, a `SUMMARY` person name, and a `DTSTART` date. Anniversary entries may include `X-SERVICE-YEARS:5`.
 
@@ -55,7 +55,7 @@ Each feed must be a valid iCalendar document with `VEVENT` entries, a `SUMMARY` 
 2. Configure the secrets and YAML mappings above.
 3. Run **Build and deploy celebration displays** once.
 
-The workflow runs daily at `12:00 UTC`: 06:00 Central Standard Time or 07:00 Central Daylight Time. GitHub Actions cron uses UTC and does not adjust for daylight saving time. It redeploys fresh data daily, but a browser tab that remains open needs a page reload to receive it.
+The workflow runs daily at `12:00 UTC`: 06:00 Central Standard Time or 07:00 Central Daylight Time. GitHub Actions cron uses UTC and does not adjust for daylight saving time. The display requests fresh generated data without using its browser cache and automatically reloads every six hours, so a continuously open TV will receive a daily deployment without manual intervention. After a deployment that predates this behavior, use a one-time hard refresh (`Ctrl+Shift+R`) or restart the PosterBooking item.
 
 The dashboard uses **America/Chicago** for current-day and Friday-preview decisions. Each screen is visible for 12 seconds: today's celebration heroes, Friday previews for Saturday/Sunday celebrations, then the Monday-Sunday weekly list. A birthday and anniversary for the same person/date share a hero. If no event is in the current week, the display stays on its branded “No celebrations this week / Check back next week!” screen.
 

@@ -1,35 +1,73 @@
 # Office Celebrations Board
 
-A full-screen, public GitHub Pages display for office birthdays and work anniversaries. The browser receives only a generated weekly data file containing a person's name, occasion type, celebration date, service years when provided, and office slug. It never receives source calendar URLs, calendar descriptions, birth years, photos, or raw HR calendar data.
+A full-screen, public GitHub Pages display for office birthdays and work anniversaries. The browser receives only generated weekly data: a person's name, event type, date, service years when supplied, and office. It never receives private BambooHR calendar URLs, raw calendars, birth years, photos, or other HR data.
 
-## Display URLs
+## Configured offices and TV URLs
 
-The deployed app supports `https://<owner>.github.io/<repo>/#/display/yanka`. Hash routing is intentionally used because GitHub Pages does not rewrite `/display/<office-slug>` to `index.html`. On a host that provides a rewrite fallback, `/display/yanka` also works.
+Bookmark the matching URL below in the office TV or PosterBooking. Office slugs and display URLs are public; calendar URLs are never public.
 
-The dashboard uses **America/Chicago** for current-day and Friday-preview decisions. It rotates each applicable hero and then the Monday–Sunday list every 12 seconds. Friday adds preview heroes for Saturday/Sunday celebrations, explicitly labeled with their actual day; those events appear again as standard heroes on their actual dates. Birthday and anniversary on the same date/person combine into one hero.
+<!-- CONFIGURED_OFFICES:START -->
 
-## First deployment
+| Office | TV display URL | Birthday secret | Anniversary secret |
+| --- | --- | --- | --- |
+| Yanka Office | `https://hyst16.github.io/office-celebrations-board/#/display/yanka` | `YANKA_BIRTHDAY_ICAL_URL` | `YANKA_ANNIVERSARY_ICAL_URL` |
+| Lincoln Admin Office | `https://hyst16.github.io/office-celebrations-board/#/display/lincolnadmin` | `LINCOLNADMIN_BIRTHDAY_ICAL_URL` | `LINCOLNADMIN_ANNIVERSARY_ICAL_URL` |
 
-1. In **Settings → Pages**, set Source to **GitHub Actions**.
-2. Add Actions secrets for every configured office. The default Yanka office requires `YANKA_BIRTHDAY_ICAL_URL` and `YANKA_ANNIVERSARY_ICAL_URL`. Their values are the respective private iCalendar URLs; do not add them to repository files or browser configuration.
-3. Run **Build and deploy celebration displays** from the Actions tab once, or wait for the daily schedule.
+### Required workflow YAML
 
-The scheduled workflow runs at `12:00 UTC`, which is 06:00 Central Standard Time and 07:00 Central Daylight Time. GitHub Actions cron is UTC-only and does not shift with DST. Adjust the cron expression if a different UTC execution time is required.
+Keep these entries under `jobs.build.steps` -> **Generate public celebration data** -> `env:` in `.github/workflows/deploy-pages.yml`:
 
-## Adding an office
-
-Add an object to `config/offices.json` with a lowercase URL-safe `slug`, public display `name`, and the names of two Actions secrets:
-
-```json
-{
-  "slug": "austin",
-  "name": "Austin Office",
-  "birthdaySecret": "AUSTIN_BIRTHDAY_ICAL_URL",
-  "anniversarySecret": "AUSTIN_ANNIVERSARY_ICAL_URL"
-}
+```yaml
+YANKA_BIRTHDAY_ICAL_URL: ${{ secrets.YANKA_BIRTHDAY_ICAL_URL }}
+YANKA_ANNIVERSARY_ICAL_URL: ${{ secrets.YANKA_ANNIVERSARY_ICAL_URL }}
+LINCOLNADMIN_BIRTHDAY_ICAL_URL: ${{ secrets.LINCOLNADMIN_BIRTHDAY_ICAL_URL }}
+LINCOLNADMIN_ANNIVERSARY_ICAL_URL: ${{ secrets.LINCOLNADMIN_ANNIVERSARY_ICAL_URL }}
 ```
 
-Then create both corresponding repository secrets and deploy. Each feed must be a valid iCalendar document with `VEVENT` entries, a `SUMMARY` person name, and a `DTSTART` date. Anniversary entries may include `X-SERVICE-YEARS:5`. Invalid/missing feeds or secrets fail the workflow before the artifact is uploaded or deployed; errors identify the office and source in Actions logs. The generator intentionally emits no data from a failed source.
+<!-- CONFIGURED_OFFICES:END -->
+
+Hash routing is intentional because GitHub Pages does not rewrite `/display/<office-slug>` to `index.html`. Do not remove `#/display/` from the saved URL.
+
+## Adding or changing an office
+
+Every office change has four required parts. Complete them together before running the workflow:
+
+1. **Edit `config/offices.json`.** Add one object inside the `[` and `]`, with a comma after every object except the last. `slug` must be lowercase, URL-safe, and unique. Use a public display name and two secret *names*, never the actual BambooHR URLs.
+   ```json
+   {
+     "slug": "austin",
+     "name": "Austin Office",
+     "birthdaySecret": "AUSTIN_BIRTHDAY_ICAL_URL",
+     "anniversarySecret": "AUSTIN_ANNIVERSARY_ICAL_URL"
+   }
+   ```
+2. **Create the two GitHub Actions repository secrets.** Go to **Settings -> Secrets and variables -> Actions -> New repository secret**. Create the exact secret names from the configuration, then paste each private BambooHR iCalendar URL as its value. Secret values are write-only by design, so GitHub shows an empty value field when later editing them.
+3. **Add both YAML entries to the workflow.** In `.github/workflows/deploy-pages.yml`, add the birthday and anniversary mappings to the `env:` block shown above. The names must match the config and the repository secrets exactly. A configured secret is not available to the workflow until its YAML mapping exists.
+4. **Refresh this README's managed office section.** Run `npm run sync:offices`, commit the resulting README change with the config/workflow change, and run `npm test`. The test fails if the configured office URLs, secret names, or YAML examples in this README become stale.
+
+Then run **Build and deploy celebration displays** manually from the Actions tab. A successful **Generate public celebration data** step confirms the workflow can read and parse every configured feed. Missing secrets, inaccessible URLs, or invalid calendar data fail the job before anything is deployed.
+
+Each feed must be a valid iCalendar document with `VEVENT` entries, a `SUMMARY` person name, and a `DTSTART` date. Anniversary entries may include `X-SERVICE-YEARS:5`.
+
+## First deployment and refresh schedule
+
+1. In **Settings -> Pages**, set Source to **GitHub Actions**.
+2. Configure the secrets and YAML mappings above.
+3. Run **Build and deploy celebration displays** once.
+
+The workflow runs daily at `12:00 UTC`: 06:00 Central Standard Time or 07:00 Central Daylight Time. GitHub Actions cron uses UTC and does not adjust for daylight saving time. It redeploys fresh data daily, but a browser tab that remains open needs a page reload to receive it.
+
+The dashboard uses **America/Chicago** for current-day and Friday-preview decisions. Each screen is visible for 12 seconds: today's celebration heroes, Friday previews for Saturday/Sunday celebrations, then the Monday-Sunday weekly list. A birthday and anniversary for the same person/date share a hero. If no event is in the current week, the display stays on its branded “No celebrations this week / Check back next week!” screen.
+
+## PosterBooking recommendation
+
+Set each PosterBooking office URL to **60 seconds** initially. At the dashboard's 12-second rotation, this gives five display screens per playlist turn: up to four celebration heroes plus the weekly list. On days with fewer events, the display naturally repeats and remains readable.
+
+For offices that regularly have more than four same-day or Friday-preview heroes, use **120 seconds** instead. That gives up to nine heroes plus the weekly list at least one appearance. PosterBooking cannot adapt duration to the day's event count, so choose a fixed duration based on the busiest day you want to guarantee. The formula is:
+
+```text
+PosterBooking duration in seconds = 12 x (maximum celebration heroes to guarantee + 1 weekly list)
+```
 
 ## Local development
 
@@ -41,4 +79,4 @@ npm test
 npm run dev
 ```
 
-Use `#/display/yanka` locally. `npm run generate:data` requires the configured environment variables and is designed for CI; never place actual feed URLs in `.env` files that may be committed.
+Use `#/display/yanka` locally. `npm run generate:data` requires the configured environment variables and is designed for CI; never place actual feed URLs in files that may be committed.

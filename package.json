@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "test": "node --test",
-    "generate:data": "node scripts/generate-data.mjs"
+    "generate:data": "node scripts/generate-data.mjs",
+    "sync:offices": "node scripts/sync-readme-offices.mjs",
+    "check:offices": "node scripts/sync-readme-offices.mjs --check"
   },
   "devDependencies": {
     "vite": "^6.1.0"
